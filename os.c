@@ -104,7 +104,57 @@ void print3()
     }
 
 }
+void round_robin(struct process* head1)
+{
+if(head1==NULL)
+{printf("err");}
 
+int count=10;
+    int tq=4;
+    struct process* ptr=head1;
+    if(head1==NULL||ptr==NULL)
+{printf("err");}
+
+    int pcount=0;
+    while(count>0&&pcount<5)
+    {
+        if(ptr->burst_time==0)
+        {
+        if(ptr->next==NULL)
+        {ptr=head1;
+        pcount++;}
+        else
+        ptr=ptr->next;
+        continue;
+        }
+
+        if(ptr->burst_time<=tq&&tq<=count)
+        {
+            printf("\nProcess with pid:%d had been exectued completely\n",ptr->pid);
+            count=count-ptr->burst_time;
+            ptr->burst_time=0;
+        }
+        else if(tq<=count)
+        {
+            printf("\nProcess with pid:%d is executed for 4 units of time and remaining time is %d",ptr->pid,(ptr->burst_time-tq));
+            ptr->burst_time=ptr->burst_time-tq;
+            count=count-tq;
+            if(ptr->next==NULL)
+            {pcount++;ptr=head1;}
+            else
+                ptr=ptr->next;
+        }
+        else{
+            printf("\nProcess with pid:%d is executed for %d units of time",ptr->pid,count);
+            ptr->burst_time-=count;
+            count=0;
+            if(ptr->next==NULL)
+        {ptr=head1;pcount++;}
+        else
+        ptr=ptr->next;
+        }
+    }
+}
 int main()
 {
     int ch=1,a,b,p,p_id;
@@ -126,6 +176,7 @@ int main()
     //print1();
     //print2();
     //print3();
-
+    round_robin(head1);
 }
+
 
