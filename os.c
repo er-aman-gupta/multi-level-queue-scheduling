@@ -104,10 +104,11 @@ void print3()
     }
 
 }
+int isEmpty1=0,isEmpty2=0,isEmpty3=0;
 void round_robin(struct process* head1)
 {
 if(head1==NULL)
-{printf("err");}
+{printf("err");return;}
 
 int count=10;
     int tq=4;
@@ -118,6 +119,8 @@ int count=10;
     int pcount=0;
     while(count>0&&pcount<5)
     {
+        if(isEmpty1==1)
+            return;
         if(ptr->burst_time==0)
         {
         if(ptr->next==NULL)
@@ -125,6 +128,8 @@ int count=10;
         pcount++;}
         else
         ptr=ptr->next;
+        if(pcount>=5)
+            isEmpty1=1;
         continue;
         }
 
@@ -155,6 +160,64 @@ int count=10;
         }
     }
 }
+void fcfs(head3)
+{
+    if(head3==NULL)
+    {
+
+        printf("err");
+        return;
+    }
+    int count=10,pcount=0;
+    struct process* ptr=head3;
+    while(count>0&&pcount<5)
+    {
+
+        if(isEmpty3==1)
+            return;
+        if(ptr->burst_time==0)
+        {
+            if(ptr->next==NULL)
+            {
+                ptr=head3;
+                pcount++;
+            }
+            else ptr=ptr->next;
+
+        if(pcount>=5)
+        {
+            isEmpty3=1;
+        }
+
+        continue;
+        }
+        printf("10");
+        if(count>=ptr->burst_time)
+        {
+            printf("\nProcess with pid:%d executed completely\n",ptr->pid);
+            count-=ptr->burst_time;
+            ptr->burst_time=0;
+            if(ptr->next==NULL)
+            {pcount++;ptr=head3;}
+            else
+                ptr=ptr->next;
+        }
+        else{
+            printf("Process with pid:%d executed for time %d\nBurst time left %d",ptr->pid,count,(ptr->burst_time-count));
+            ptr->burst_time-=count;
+            count=0;
+            if(ptr->next==NULL)
+            {pcount++;ptr=head3;}
+            else
+                ptr=ptr->next;
+        }
+    }
+
+}
+void priority_scheduling(head2)
+{
+
+}
 int main()
 {
     int ch=1,a,b,p,p_id;
@@ -176,7 +239,9 @@ int main()
     //print1();
     //print2();
     //print3();
-    round_robin(head1);
+    //round_robin(head1);
+    fcfs(head3);
 }
+
 
 
