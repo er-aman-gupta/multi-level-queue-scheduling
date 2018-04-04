@@ -1,48 +1,29 @@
 #include<stdio.h>
 #include<malloc.h>
 struct process{
-    int arrival_time,burst_time,priority,pid;
+    int pid,burst_time,priority;
     struct process* next;
 };
 struct process* head1=NULL;
 struct process* head2=NULL;
 struct process* head3=NULL;
-void inserter(int a,int b,int p,int p_id)
+void priority_inserter(int pid,int burst,int p)
 {
-    struct process* head=NULL;
-    if(p>0&&p<=5)
-        head=head1;
-    else if(p>5&&p<=10)
-        head=head2;
-    else if(p>10&&p<=15)
-        head=head3;
-    else
-    {
-        printf("Wrong priority!!!!!\nPlease enter again.\n");
-        return;
-    }
     struct process* newnode=(struct process*)malloc(sizeof(struct process));
-    newnode->arrival_time=a;
-    newnode->burst_time=b;
+    newnode->burst_time=burst;
+    newnode->pid=pid;
     newnode->priority=p;
-    newnode->pid=p_id;
     newnode->next=NULL;
-    if(head==NULL)
+    if(head2==NULL)
     {
-        head=newnode;
-        //newnode->next=NULL;
-
-        if(head==NULL)
-        {
-        printf("NOT");
-        }
+        head2=newnode;
     }
     else{
-    struct process* ptr=head;
-        if(head->arrival_time>a)
+    struct process* ptr=head2;
+        if(head2->priority>p)
         {
-            newnode->next=head;
-            head=newnode;
+            newnode->next=head2;
+            head2=newnode;
 
         }
 
@@ -55,193 +36,264 @@ void inserter(int a,int b,int p,int p_id)
             ptr->next=newnode;
         }
     }
-    if(p>0&&p<=5)
-        head1=head;
-    else if(p>5&&p<=10)
-        head2=head;
-    else if(p>10&&p<=15)
-        head3=head;
 }
-void print1()
-{
-    printf("In header 1");
-    struct process* ptr=head1;
-    while(ptr!=NULL)
-    {
-        printf("Arrival%d\n",ptr->arrival_time);
-        printf("Burst%d\n",ptr->burst_time);
-        printf("Priority%d\n",ptr->priority);
-        printf("PID%d\n\n",ptr->pid);
-        ptr=ptr->next;
-    }
 
-}
-void print2()
-{
-    printf("In header 2");
-    struct process* ptr=head2;
-    while(ptr!=NULL)
-    {
-        printf("Arrival%d\n",ptr->arrival_time);
-        printf("Burst%d\n",ptr->burst_time);
-        printf("Priority%d\n",ptr->priority);
-        printf("PID%d\n\n",ptr->pid);
-        ptr=ptr->next;
-    }
-
-}
-void print3()
-{
-    printf("In header 3");
-    struct process* ptr=head3;
-    while(ptr!=NULL)
-    {
-        printf("Arrival%d\n",ptr->arrival_time);
-        printf("Burst%d\n",ptr->burst_time);
-        printf("Priority%d\n",ptr->priority);
-        printf("PID%d\n\n",ptr->pid);
-        ptr=ptr->next;
-    }
-
-}
-int isEmpty1=0,isEmpty2=0,isEmpty3=0;
-void round_robin(struct process* head1)
-{
-if(head1==NULL)
-{printf("err");return;}
-
-int count=10;
-    int tq=4;
-    struct process* ptr=head1;
-    if(head1==NULL||ptr==NULL)
-{printf("err");}
-
-    int pcount=0;
-    while(count>0&&pcount<5)
-    {
-        if(isEmpty1==1)
-            return;
-        if(ptr->burst_time==0)
-        {
-        if(ptr->next==NULL)
-        {ptr=head1;
-        pcount++;}
-        else
-        ptr=ptr->next;
-        if(pcount>=5)
-            isEmpty1=1;
-        continue;
-        }
-
-        if(ptr->burst_time<=tq&&tq<=count)
-        {
-            printf("\nProcess with pid:%d had been exectued completely\n",ptr->pid);
-            count=count-ptr->burst_time;
-            ptr->burst_time=0;
-        }
-        else if(tq<=count)
-        {
-            printf("\nProcess with pid:%d is executed for 4 units of time and remaining time is %d",ptr->pid,(ptr->burst_time-tq));
-            ptr->burst_time=ptr->burst_time-tq;
-            count=count-tq;
-            if(ptr->next==NULL)
-            {pcount++;ptr=head1;}
-            else
-                ptr=ptr->next;
-        }
-        else{
-            printf("\nProcess with pid:%d is executed for %d units of time",ptr->pid,count);
-            ptr->burst_time-=count;
-            count=0;
-            if(ptr->next==NULL)
-        {ptr=head1;pcount++;}
-        else
-        ptr=ptr->next;
-        }
-    }
-}
-void fcfs(head3)
-{
-    if(head3==NULL)
-    {
-
-        printf("err");
-        return;
-    }
-    int count=10,pcount=0;
-    struct process* ptr=head3;
-    while(count>0&&pcount<5)
-    {
-
-        if(isEmpty3==1)
-            return;
-        if(ptr->burst_time==0)
-        {
-            if(ptr->next==NULL)
-            {
-                ptr=head3;
-                pcount++;
-            }
-            else ptr=ptr->next;
-
-        if(pcount>=5)
-        {
-            isEmpty3=1;
-        }
-
-        continue;
-        }
-        printf("10");
-        if(count>=ptr->burst_time)
-        {
-            printf("\nProcess with pid:%d executed completely\n",ptr->pid);
-            count-=ptr->burst_time;
-            ptr->burst_time=0;
-            if(ptr->next==NULL)
-            {pcount++;ptr=head3;}
-            else
-                ptr=ptr->next;
-        }
-        else{
-            printf("Process with pid:%d executed for time %d\nBurst time left %d",ptr->pid,count,(ptr->burst_time-count));
-            ptr->burst_time-=count;
-            count=0;
-            if(ptr->next==NULL)
-            {pcount++;ptr=head3;}
-            else
-                ptr=ptr->next;
-        }
-    }
-
-}
-void priority_scheduling(head2)
+void inserter()
 {
 
-}
-int main()
-{
-    int ch=1,a,b,p,p_id;
+    int ch=1;
+    int pid,priority,burst;
     while(ch)
     {
-        printf("Enter the arrival time");
-        scanf("%d",&a);
-        printf("Enter the Burst time");
-        scanf("%d",&b);
-        printf("Enter the priority time");
-        scanf("%d",&p);
-        printf("Enter the pid time");
-        scanf("%d",&p_id);
-        inserter(a,b,p,p_id);
-        printf("Want to enter more ??");
+        printf("\nEnter Pid for the process ");
+        scanf("%d",&pid);
+        printf("\nEnter Burst Time for the process ");
+        scanf("%d",&burst);
+        printf("\nEnter priority of the process ");
+        scanf("%d",&priority);
+        if(priority>=6 &&priority<=10)
+            priority_inserter(pid,burst,priority);
+        else{
+            struct process* newnode=(struct process*)malloc(sizeof(struct process));
+            newnode->pid=pid;
+            newnode->burst_time=burst;
+            newnode->priority=priority;
+            newnode->next=NULL;
+            switch(priority)
+            {
+                case 1:
+                case 2:
+                case 3:
+                case 4:
+                case 5:{
+                            if(head1==NULL)
+                            {
+                                head1=newnode;
+                            }
+                            else{
+                                struct process* ptr=head1;
+                                while(ptr->next!=NULL)
+                                {
+                                    ptr=ptr->next;
+                                }
+                                ptr->next=newnode;
+                            }
+                       }
+                       break;
+                case 11:
+                case 12:
+                case 13:
+                case 14:
+                case 15:{
+                            if(head3==NULL)
+                            {
+                                head3=newnode;
+                            }
+                            else{
+                                struct process* ptr=head3;
+                                while(ptr->next!=NULL)
+                                {
+                                    ptr=ptr->next;
+                                }
+                                ptr->next=newnode;
+                            }
+                        }
+                        break;
+            }
+        }
+        printf("Want to enter more??");
         scanf("%d",&ch);
+    }
+}
+int isEmpty(struct process* head)
+{
+    if(head==NULL)
+        return 1;
+    else return 0;
+}
+int isExhausted(struct process* head)
+{
+    struct process* ptr=head;
+    if(isEmpty(head))
+        return 1;
+    else{
+        while(ptr!=NULL)
+        {
+            if(ptr->burst_time!=0)
+                return 0;
+            ptr=ptr->next;
+        }
+    }
+    return 1;
+}
+void round_robin()
+{
+    if(isEmpty(head1))
+        return;
+    printf("\nDoing Round Robin");
+    struct process* ptr=head1;
+    int tq=4,total_time=10;
+    while(total_time>0)
+    {
+        if(isExhausted(head1))
+            return;
+        if(ptr->burst_time==0)
+        {
+            if(ptr->next==NULL)
+                ptr=head1;
+            else
+                ptr=ptr->next;
+            continue;
+        }
+        if(tq<=total_time&&tq>=ptr->burst_time)
+        {
+            printf("Process with pid %d is completed\n",ptr->pid);
+            total_time-=ptr->burst_time;
+            ptr->burst_time=0;
+            if(ptr->next==NULL)
+                ptr=head1;
+            else
+                ptr=ptr->next;
+        }
+        else if(tq<=total_time&&tq<ptr->burst_time)
+        {
+            printf("Process with pid %d executed for 4 units of time \n",ptr->pid);
+            total_time-=tq;
+            ptr->burst_time-=tq;
+            if(ptr->next==NULL)
+                ptr=head1;
+            else
+                ptr=ptr->next;
+        }
+        else{
+            printf("Process with pid %d executed for %d units of time \n",ptr->pid,total_time);
+            ptr->burst_time-=total_time;
+            total_time=0;
+        }
 
     }
-    //print1();
-    //print2();
-    //print3();
-    //round_robin(head1);
-    fcfs(head3);
+}
+void priority()
+{
+    if(isEmpty(head2))
+        return 1;
+    printf("Doing priority\n");
+    struct process* ptr=head2;
+    int total_time=10;
+    while(total_time>0)
+    {
+        if(isExhausted(head2))
+        {
+            return 1;
+        }
+        if(ptr->burst_time==0)
+        {
+            if(ptr->next==NULL)
+                ptr=head2;
+            else
+                ptr=ptr->next;
+            continue;
+        }
+        if(total_time>=ptr->burst_time)
+        {
+            printf("Process with pid %d is completed\n",ptr->pid);
+            total_time-=ptr->burst_time;
+            ptr->burst_time=0;
+            if(ptr->next==NULL)
+                ptr=head2;
+            else
+                ptr=ptr->next;
+        }
+        else{
+            printf("Process with pid %d executed for %d units of time \n",ptr->pid,total_time);
+            ptr->burst_time-=total_time;
+            total_time=0;
+        }
+    }
+}
+void fcfs()
+{
+    if(isEmpty(head3))
+        return 1;
+    printf("Doing first come first serve\n");
+    struct process* ptr=head3;
+    int total_time=10;
+    while(total_time>0)
+    {
+        if(isExhausted(head3))
+        {
+            return 1;
+        }
+        if(ptr->burst_time==0)
+        {
+            if(ptr->next==NULL)
+                ptr=head3;
+            else
+                ptr=ptr->next;
+            continue;
+        }
+        if(total_time>=ptr->burst_time)
+        {
+            printf("Process with pid %d is completed\n",ptr->pid);
+            total_time-=ptr->burst_time;
+            ptr->burst_time=0;
+            if(ptr->next==NULL)
+                ptr=head3;
+            else
+                ptr=ptr->next;
+        }
+        else{
+            printf("Process with pid %d executed for %d units of time \n",ptr->pid,total_time);
+            ptr->burst_time-=total_time;
+            total_time=0;
+        }
+    }
 }
 
+/*void print1()
+{
+    struct process* ptr=head3;
+    while(ptr!=NULL)
+    {
+        printf("\npid %d",ptr->pid);
+        ptr=ptr->next;
+    }
+}*/
+int main()
+{
+    inserter();
 
+    while(!isExhausted(head1)||!isExhausted(head2)||!isExhausted(head3))
+    {
+            round_robin();
+    priority();
+    fcfs();
+    }
+}
 
+/*
+1
+24
+1
+1
+2
+3
+2
+1
+3
+23
+6
+1
+4
+11
+7
+1
+5
+36
+11
+1
+6
+25
+15
+0
+*/
