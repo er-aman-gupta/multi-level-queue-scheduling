@@ -369,15 +369,29 @@ void fcfs()
     }
 }
 
-/*void print1()
+void print1()
 {
-    struct process* ptr=head3;
+    printf("\n\nPID\t\tBurst Time\t\tPriority\t\tWaiting time\n-----------------------------------------------------------------------------\n");
+    struct process* ptr=head1;
     while(ptr!=NULL)
     {
-        printf("\npid %d",ptr->pid);
+        printf("%d\t\t%d\t\t\t%d\t\t\t%d\n",ptr->pid,ptr->burst1,ptr->priority,ptr->waiting_time);
         ptr=ptr->next;
     }
-}*/
+    ptr=head2;
+    while(ptr!=NULL)
+    {
+        printf("%d\t\t%d\t\t\t%d\t\t\t%d\n",ptr->pid,ptr->burst1,ptr->priority,ptr->waiting_time);
+        ptr=ptr->next;
+    }
+    ptr=head3;
+    while(ptr!=NULL)
+    {
+        printf("%d\t\t%d\t\t\t%d\t\t\t%d\n",ptr->pid,ptr->burst1,ptr->priority,ptr->waiting_time);
+        ptr=ptr->next;
+    }
+
+}
 
 void total_waiting_time_calculator()
 {
@@ -415,6 +429,7 @@ void gantt_printer()
     int i=0,j=0;
     int pipe[30];
     int pipecount=0;
+    y=3;
     for(int i=0;i<strlen(out);i++)
     {
         if(isdigit(out[i])||out[i]==124)
@@ -428,8 +443,17 @@ void gantt_printer()
         }
 
     }
-    x=0;
     y=2;
+    //printf("%d",pipe[pipecount-1]);
+    for(int i=0;i<pipe[pipecount-1];i++)
+    {
+        gotoxy(i,y);
+        printf("~");
+        gotoxy(i,y+2);
+        printf("~");
+    }
+    x=0;
+    y=5;
     i=0;
     j=0;
     for(i=0;i<acount;i+=2)
@@ -455,57 +479,12 @@ int main()
             fcfs();
     }
     printf("Total time taken=%d\n",total_running_time);
-    total_waiting_time_calculator();
+    print1();
     system("pause");
     system("cls");
-  //  system("cls");/*
-    //printf("%s\n",out);
     printf("Gantt Chart");
     gantt_printer();
-    //printf("%d\n",acount);
-            /*int x=2,y=0;
-            for(j=0;j<strlen(out)-1;j++)
-            {
-                if(out[j+1]==124)
-                {
-                    gotoxy(x,y);
-                    printf("%d",a[i]);
-                    i+=2;
-                    x+=8;
-                }
-                else printf(" ");
-            }*/
-    /*int x=0,y=0;
-    int i=0,j=0;
-    int pipe[30];
-    int pipecount=0;
-    for(int i=0;i<strlen(out);i++)
-    {
-        if(isdigit(out[i])||out[i]==124)
-        {
-            gotoxy(x,y);
-            printf("%c",out[i]);
-            pipe[pipecount]=x;
-            pipecount++;
-            x+=4;
-
-        }
-
-    }
-    x=0;
-    y=1;
-    i=0;
-    j=0;
-    for(i=0;i<acount;i+=2)
-    {
-        gotoxy(pipe[j],y);
-        printf("%d",a[i]);
-        j+=2;
-    }
-    gotoxy(pipe[j],y);
-    printf("%d",total_running_time);
-*/
-
+    total_waiting_time_calculator();
 }
 /*
 1
